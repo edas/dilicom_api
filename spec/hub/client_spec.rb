@@ -7,7 +7,7 @@ describe DilicomApi::Hub::Client do
   describe "#json_request" do
     let(:example_end_point) { "/example" }
     let(:params) { { 'a' => "1", 'b' => "2"} }
-    context "http request" do
+    context "as an http request" do
       let(:gln) { 1234 }
       let(:password) { "abcd" }
       let(:autorization_header) { ["Authorization","Basic MTIzNDphYmNk"] }
@@ -48,7 +48,7 @@ describe DilicomApi::Hub::Client do
         expect(received).to eq(params)
       end
     end
-    context "with an HTTP error" do
+    context "when get an HTTP error" do
       it "should raise an exception" do
         set_connection do |stub|
           stub.get(example_end_point) do |env|   
@@ -59,7 +59,7 @@ describe DilicomApi::Hub::Client do
         expect{subject.send(:json_request, "/example", {})}.to raise_error
       end
     end
-    context "with a non-json response" do
+    context "when get a non-json response" do
       it "should raise an exception" do
         set_connection do |stub|
           stub.get(example_end_point) do |env|   
@@ -70,7 +70,7 @@ describe DilicomApi::Hub::Client do
         expect{subject.send(:json_request, "/example", {})}.to raise_error
       end
     end
-    context "with a dilicom return status error" do
+    context "when get a dilicom return status error" do
       it "should raise an exception" do
         set_connection do |stub|
           stub.get(example_end_point) do |env|   
@@ -81,7 +81,7 @@ describe DilicomApi::Hub::Client do
         expect{subject.send(:json_request, "/example", {})}.to raise_error
       end
     end
-    context "for a successfull response" do
+    context "when get a successfull response" do
       it "should answer json" do
         set_connection do |stub|
           stub.get(example_end_point) do |env|   

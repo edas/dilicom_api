@@ -2,16 +2,20 @@ require 'spec_helper'
 require 'active_support/all'
 require 'json'
 
+
+
 describe DilicomApi::Hub::Client do
-  describe "#notices" do
-    include_context "faraday connection"
+ 
+  # Generic get_notices tests 
+  shared_examples "get_notices" do
+    include_context "faraday connection" 
+    let(:end_point) { "/v1/hub-numerique-api/json/getNotices" }
     let(:onix_urls) {
       [
         "https://hub-dilicom.centprod.com/notices_onyx/diffusion_3025594195700_201008272128_1110247456419854240546744705832927698715.xml", 
         "https://hub-dilicom.centprod.com/notices_onyx/diffusion_3025594164342_201008272330_1256851354542405467447058329276987145685.xml"
       ]
     }
-    let(:end_point) { "/v1/hub-numerique-api/json/getNotices" }
     let(:message) { 
       JSON.generate({
         onixFileUrls: [
@@ -27,9 +31,6 @@ describe DilicomApi::Hub::Client do
         "returnStatus" => "OK"
       })
     }
-    let(:links) { }
-    let(:date) { }
-
     it "end point should be called" do
       called = false
       set_connection do |stub|
@@ -38,7 +39,7 @@ describe DilicomApi::Hub::Client do
           [200, {}, message]
         end
       end
-      links = subject.notices(since: DateTime.now)
+      links = subject.send(method, *method_parameters)
       expect(called).to be_true
     end
     it "should return array of links" do
@@ -47,24 +48,42 @@ describe DilicomApi::Hub::Client do
           [200, {}, message]
         end
       end
-      links = subject.notices(since: DateTime.now)
+      links = subject.send(method, *method_parameters)
       expect(links).to be_a(Array)
       expect(links).to eq(onix_urls)
     end
-    context "initialization" do
-      it "should call initialization" do
-        options = { }
+    context "when no notices available" do
+      it "should return empty array" do
         set_connection do |stub|
-          stub.get(end_point) do |env|  
-            options = env[:params]
-            [200, {}, message]
+          stub.get(end_point) do |env|   
+            [200, {}, nonotices]
           end
         end
-        subject.notices(:initialization)
-        expect(options).to have_key("initialization")
+        links = subject.send(method, *method_parameters)
+        expect(links).to be_a(Array)
+        expect(links).to be_empty
       end
+    end 
+  end
+
+  # Tests when call for initialization
+  shared_examples "all_notices (initialization)" do
+    it "should call initialization" do
+      options = { }
+      set_connection do |stub|
+        stub.get(end_point) do |env|  
+          options = env[:params]
+          [200, {}, message]
+        end
+      end
+      subject.send(method, *method_parameters)
+      expect(options).to have_key("initialization")
     end
-    context "since" do
+  end
+
+  # Tests when call for latest notices
+  shared_examples "latest_notices" do
+    context "when ask for all notices since a date" do
       it "should call sinceDate" do
         options = { }
         set_connection do |stub|
@@ -74,7 +93,7 @@ describe DilicomApi::Hub::Client do
           end
         end
         date = DateTime.now
-        subject.notices(since: date)
+        subject.send(method, since: date)
         expect(options).to have_key("sinceDate")
       end
       it "should use french timezone" do
@@ -86,13 +105,13 @@ describe DilicomApi::Hub::Client do
           end
         end
         date = DateTime.now
-        subject.notices(since: date)
+        subject.send(method, since: date)
         received = options["sinceDate"]
         zone = ActiveSupport::TimeZone.new("Europe/Paris")
         expect(date.to_i).to eq(zone.parse(received).to_i)
       end
     end
-    context "last connection" do
+    context "when ask for all notices from last connection" do
       it "should call lastConnection" do
         options = { }
         set_connection do |stub|
@@ -101,21 +120,56 @@ describe DilicomApi::Hub::Client do
             [200, {}, message]
           end
         end
-        subject.notices(:last_connection)
+        subject.send(method, :last_connection)
         expect(options).to have_key("lastConnection")
       end
     end
-    context "no notices" do
-      it "should return empty array" do
-        set_connection do |stub|
-        stub.get(end_point) do |env|   
-          [200, {}, nonotices]
-        end
+  end
+
+  # Actual tests
+  
+  describe "#get_notices" do
+    let(:method) { :get_notices }
+    include_examples "get_notices" do
+      let(:method_parameters) { [ since: DateTime.now ]  }
+    end
+    context "when called with :initialization" do
+      include_examples "all_notices (initialization)" do
+        let(:method_parameters) { [ :initialization ] }
       end
-      links = subject.notices(since: DateTime.now)
-      expect(links).to be_a(Array)
-      expect(links).to be_empty
+    end
+    include_examples "latest_notices"
+  end
+
+  describe "#all_notices" do
+    let(:method) { :all_notices }
+    include_examples "get_notices" do
+      let(:method_parameters) { [ ] }
+    end
+    include_examples "all_notices (initialization)" do
+      let(:method_parameters) { [ ] }
+    end
+  end
+
+  describe "#latest_notices" do
+    let(:method) { :latest_notices }
+    include_examples "get_notices" do
+      let(:method_parameters) { [ since: DateTime.now ]  }
+    end
+    include_examples "latest_notices"
+    context "when called with no parameters" do
+      it "should call lastConnection" do
+        options = { }
+        set_connection do |stub|
+          stub.get(end_point) do |env|  
+            options = env[:params]
+            [200, {}, message]
+          end
+        end
+        subject.send(method)
+        expect(options).to have_key("lastConnection")
       end
     end
   end
 end
+

@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'faraday_simulation'
+  gem.add_development_dependency 'gem-release'
 
   gem.required_ruby_version = '>= 2.0.0'
 end

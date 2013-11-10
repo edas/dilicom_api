@@ -1,5 +1,4 @@
 require 'faraday'
-require 'active_support/time'
 require 'json'
 
 module DilicomApi

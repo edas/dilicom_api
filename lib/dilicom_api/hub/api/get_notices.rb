@@ -1,4 +1,5 @@
 require "dilicom_api/hub/client"
+require 'active_support/time'
 
 module DilicomApi
   module Hub
@@ -13,8 +14,7 @@ module DilicomApi
           params["lastConnection"] = nil
         else
           if options.has_key? :since
-            since = options[:since]
-            since = since.in_time_zone(DILICOM_TIMEZONE) if since.respond_to?(:in_time_zone)
+            since = options[:since].in_time_zone(DILICOM_TIMEZONE)
             params["sinceDate"]  = since.iso8601.gsub(/\+.*/,'')
           end
         end

@@ -32,7 +32,9 @@ How to use
 Implemented
 -----------
 
-* get_notices, get all available onix descriptions by date, by last connection, or for initialization (initialization is not implemented by Dilicom)
+* get_notices(:last_connection) aliased latest_notices() and latest_notices(:last_connection)
+* get_notices(since: datetime) aliased latest_notices(since: datetime)
+* get_notices(:initialization) aliased all_notices() ; not supported by Dilicom
 
 
 License

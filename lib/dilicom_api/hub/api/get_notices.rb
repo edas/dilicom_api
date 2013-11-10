@@ -22,14 +22,15 @@ module DilicomApi
         data.has_key?('noNotice') ? [ ] : data['onixFileUrls'].map { |e| e['httpLink'] }
       end
 
-      def all_notices
+      def all_notices(init=:initialization)
+        raise ":initialization expected as argument, `#{init}` given" if init != :initialization
         get_notices(:initialization)
       end
 
       def latest_notices(options=:last_connection)
         get_notices(options)
       end
-      
+
     end
   end
 end

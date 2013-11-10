@@ -13,7 +13,9 @@ module DilicomApi
           params["lastConnection"] = nil
         else
           if options.has_key? :since
-            params["sinceDate"]  = options[:since].in_time_zone(DILICOM_TIMEZONE).iso8601.gsub(/\+.*/,'')
+            since = options[:since]
+            since = since.in_time_zone(DILICOM_TIMEZONE) if since.respond_to?(:in_time_zone)
+            params["sinceDate"]  = since.iso8601.gsub(/\+.*/,'')
           end
         end
         data = json_request(end_point, params, timeout: 180)

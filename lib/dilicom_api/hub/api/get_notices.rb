@@ -4,7 +4,7 @@ require 'active_support/time'
 module DilicomApi
   module Hub
     class Client
-      def notices(options)
+      def latest_notices(options=:last_connection)
         end_point = '/v1/hub-numerique-api/json/getNotices'
         params = { }
         case options
@@ -21,6 +21,8 @@ module DilicomApi
         data = json_request(end_point, params, timeout: 180)
         data.has_key?('noNotice') ? [ ] : data['onixFileUrls'].map { |e| e['httpLink'] }
       end
+
+      alias_method :latest_notices, :notices
     end
   end
 end

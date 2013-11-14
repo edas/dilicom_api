@@ -19,9 +19,9 @@ module DilicomApi
         @gln = gln
         @password = password
         server = @@servers[env]
+        raise "no server for env #{env.to_s}" if server.nil?
         connect(server) if gln and password
       end
-
       
 
     protected

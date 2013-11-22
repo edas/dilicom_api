@@ -4,9 +4,15 @@ require 'active_support/time'
 module DilicomApi
   module Hub
     class Client
-      def get_notices(param=nil, since: nil)
-        end_point = '/v1/hub-numerique-api/json/getNotices'
+      
+      def get_notices(param=nil, since: nil, distributor: nil)
+        if distributor
+          end_point = '/v1/hub-numerique-api/json/getNoticesForDistributor'
+        else
+          end_point = '/v1/hub-numerique-api/json/getNotices'
+        end
         params = { }
+        params["glnDistributor"] = distributor if distributor
         case param
         when :initialization
           params["initialization"] = nil
@@ -29,6 +35,21 @@ module DilicomApi
 
       def latest_notices(options=:last_connection)
         get_notices(options)
+      end
+
+      def get_notices_for_distributor(distributor, param=nil, since:nil)
+        opt = { distributor: distributor }
+        opt[:since] = since if since
+        get_notices(param, opt)
+      end
+
+      def all_notices_for_distributor(distributor, init=:initialization)
+        raise ":initialization expected as argument, `#{init}` given" if init != :initialization
+        get_notices_for_distributor(distributor, :initialization)
+      end
+
+      def latest_notices_for_distributor(distributor, options=:last_connection)
+        get_notices_for_distributor(distributor, options)
       end
 
     end

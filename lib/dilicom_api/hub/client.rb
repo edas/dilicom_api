@@ -1,5 +1,6 @@
 require 'faraday'
 require 'json'
+require 'active_support/time'
 
 module DilicomApi
   module Hub
@@ -13,11 +14,13 @@ module DilicomApi
       attr_accessor :connection
       attr_writer :gln
       attr_writer :password
+      attr_accessor :work_around_timezone_issues
 
       def initialize(gln=nil, password=nil, env: :test)
         @env = env
         @gln = gln
         @password = password
+        @work_around_timezone_issues = true
         server = @@servers[env]
         raise "no server for env #{env.to_s}" if server.nil?
         connect(server) if gln and password
@@ -25,6 +28,22 @@ module DilicomApi
       
 
     protected
+
+      def work_around_timezone_issues(time, fix=:before)
+        if @work_around_timezone_issues
+          time = time.in_time_zone(DILICOM_TIMEZONE)
+          if time.hour == 2 or (time.hour == 3 and time.min == 0 and time.sec == 0)
+            if time.to_time.beginning_of_day.zone != time.to_time.end_of_day.zone
+              if fix==:before
+                return time.to_time.change( hour:1, min:59, sec:59)
+              elsif fix==:after
+                return time.to_time.change( hour:3, min:0, sec:1)
+              end
+            end
+          end
+        end
+        return time
+      end
 
       def json_request(end_point, params={}, timeout: nil)
         res = connection.get(end_point) do |req|

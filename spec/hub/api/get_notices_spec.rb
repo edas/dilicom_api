@@ -1,8 +1,4 @@
 require 'spec_helper'
-require 'active_support/all'
-require 'json'
-
-
 
 describe DilicomApi::Hub::Client do
  
@@ -112,6 +108,40 @@ describe DilicomApi::Hub::Client do
         received = options["sinceDate"]
         zone = ActiveSupport::TimeZone.new("Europe/Paris")
         expect(date.to_i).to eq(zone.parse(received).to_i)
+      end
+      context "when since is during a daylight saving change" do
+        it "should call with a sinceDate before the change " do
+          options = { }
+          set_connection do |stub|
+            stub.get(end_point) do |env|  
+              options = env[:params]
+              [200, {}, message]
+            end
+          end
+          date = Time.new(2013,10,27,12,30,0).in_time_zone("Europe/Paris").change(hour:2, min:30)
+          params = method_parameters
+          params << { since: date }
+          subject.send(method, *params)
+          expect(options).to have_key("sinceDate")
+          expect(options["sinceDate"]).to match(/^2013-10-27T01:59/)
+        end
+      end
+      context "when since is after a daylight saving change" do
+        it "should call with a sinceDate without change " do
+          options = { }
+          set_connection do |stub|
+            stub.get(end_point) do |env|  
+              options = env[:params]
+              [200, {}, message]
+            end
+          end
+          date = Time.new(2013,10,27,12,30,0).in_time_zone("Europe/Paris").change(hour:12, min:30)
+          params = method_parameters
+          params << { since: date }
+          subject.send(method, *params)
+          expect(options).to have_key("sinceDate")
+          expect(options["sinceDate"]).to match(/^2013-10-27T12:30/)
+        end
       end
     end
     context "when ask for all notices from last connection" do

@@ -3,6 +3,8 @@ require 'bundler/setup'
 require 'rspec'
 require 'dilicom_api' 
 require 'faraday_simulation'
+require 'active_support/all'
+require 'json'
 
 
 

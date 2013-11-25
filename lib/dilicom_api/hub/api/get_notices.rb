@@ -21,6 +21,7 @@ module DilicomApi
         else
           since ||= param
           raise "at least a parameter is required in #get_notices" if since.nil?
+          since = work_around_timezone_issues(since, :before)
           since = since.in_time_zone(DILICOM_TIMEZONE)
           params["sinceDate"]  = since.iso8601.gsub(/\+.*/,'')
         end

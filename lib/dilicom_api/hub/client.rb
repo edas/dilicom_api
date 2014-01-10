@@ -58,6 +58,15 @@ module DilicomApi
         body
       end
 
+      def basic_request(end_point, params={}, timeout: nil)
+        res = connection.get(end_point) do |req|
+          req.params = params
+          req.options[:timeout] = timeout unless timeout.nil?
+        end
+        raise DilicomHttpError, "Dilicom returned status #{res.status} in #{end_point} with #{params.to_s}" if res.status != 200
+        res.body
+      end
+
       def connect(server)
         @connection ||= ::Faraday::Connection.new(server) do |faraday|
           faraday_builder(faraday)

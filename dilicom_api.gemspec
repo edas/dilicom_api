@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'faraday'
   gem.add_dependency 'faraday_middleware'
-  gem.add_dependency 'activesupport'
+  gem.add_dependency 'activesupport', '>= 4.0.0'
   gem.add_dependency 'i18n'
   gem.add_dependency 'tzinfo'
 

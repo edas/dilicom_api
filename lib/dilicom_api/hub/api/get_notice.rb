@@ -11,7 +11,6 @@ module DilicomApi
         params = { ean13: ean13, glnDistributor: distributor}
         basic_request(end_point, params, timeout: 180)
       end
-
     end
   end
 end

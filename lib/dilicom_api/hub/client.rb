@@ -60,6 +60,7 @@ module DilicomApi
 
       def basic_request(end_point, params={}, timeout: nil)
         res = connection.get(end_point) do |req|
+          req.headers['Accept'] = 'application/xml'
           req.params = params
           req.options[:timeout] = timeout unless timeout.nil?
         end

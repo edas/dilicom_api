@@ -57,6 +57,17 @@ describe DilicomApi::Hub::Client do
       expect(options).to have_key("glnDistributor")
       expect(options["glnDistributor"]).to eq(distributor)
     end
+    it "should not send the distributor if not given" do
+      options = { }
+      set_connection do |stub|
+        stub.get(end_point) do |env|
+          options = env[:params]
+          [200, {}, message]
+        end
+      end
+      subject.get_notice(ean13)
+      expect(options).not_to have_key("glnDistributor")
+    end
     it "should return an onix file" do
       set_connection do |stub|
         stub.get(end_point) do |env|  

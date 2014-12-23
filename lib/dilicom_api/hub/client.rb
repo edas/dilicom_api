@@ -53,7 +53,7 @@ module DilicomApi
         fail DilicomHttpError, "Dilicom returned status #{res.status} in #{end_point} with #{params}" if res.status != 200
         body = JSON.load(res.body)
         fail UnreadableMessageError, "Dilicom a returned a unreadable json for #{end_point} with #{params} : #{res.body}" if body.nil?
-        fail DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params} : #{body['returnMessage']}" if body.key?('returnStatus') and !%w(OK WARNING).include?(body['returnStatus'])
+        fail DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params} : #{body['returnMessage']}" if body.key?('returnStatus') && !%w(OK WARNING).include?(body['returnStatus'])
         body
       end
 

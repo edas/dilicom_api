@@ -23,7 +23,7 @@ module DilicomApi
         @work_around_timezone_issues = true
         server = @@servers[env]
         fail "no server for env #{env}" if server.nil?
-        connect(server) if gln and password
+        connect(server) if gln && password
       end
 
       protected

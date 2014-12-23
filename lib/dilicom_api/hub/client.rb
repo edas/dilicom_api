@@ -62,7 +62,7 @@ module DilicomApi
           faraday_builder(faraday)
           # Adapter should always be last line of Faraday builder
           # otherwise at least HTTP Auth doesn't work)
-          faraday.adapter  Faraday.default_adapter
+          faraday.adapter Faraday.default_adapter
         end
       end
 

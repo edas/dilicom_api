@@ -50,10 +50,10 @@ module DilicomApi
           req.params = params
           req.options[:timeout] = timeout unless timeout.nil?
         end
-        fail DilicomHttpError, "Dilicom returned status #{res.status} in #{end_point} with #{params.to_s}" if res.status != 200
+        fail DilicomHttpError, "Dilicom returned status #{res.status} in #{end_point} with #{params}" if res.status != 200
         body = JSON.load(res.body)
-        fail UnreadableMessageError, "Dilicom a returned a unreadable json for #{end_point} with #{params.to_s} : #{res.body}" if body.nil?
-        fail DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params.to_s} : #{body['returnMessage']}" if body.has_key?('returnStatus') and not ['OK','WARNING'].include?(body['returnStatus'])
+        fail UnreadableMessageError, "Dilicom a returned a unreadable json for #{end_point} with #{params} : #{res.body}" if body.nil?
+        fail DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params} : #{body['returnMessage']}" if body.has_key?('returnStatus') and not ['OK','WARNING'].include?(body['returnStatus'])
         body
       end
 

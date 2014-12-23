@@ -67,7 +67,9 @@ module DilicomApi
       end
 
       def faraday_builder(faraday)
-        faraday.use Faraday::Request::BasicAuthentication, @gln, @password if @gln && @password
+        faraday.use(Faraday::Request::BasicAuthentication,
+                    @gln,
+                    @password) if @gln && @password
       end
     end
   end

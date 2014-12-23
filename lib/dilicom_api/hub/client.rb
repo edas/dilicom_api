@@ -22,7 +22,7 @@ module DilicomApi
         @password = password
         @work_around_timezone_issues = true
         server = @@servers[env]
-        raise "no server for env #{env.to_s}" if server.nil?
+        fail "no server for env #{env.to_s}" if server.nil?
         connect(server) if gln and password
       end
 
@@ -50,10 +50,10 @@ module DilicomApi
           req.params = params
           req.options[:timeout] = timeout unless timeout.nil?
         end
-        raise DilicomHttpError, "Dilicom returned status #{res.status} in #{end_point} with #{params.to_s}" if res.status != 200
+        fail DilicomHttpError, "Dilicom returned status #{res.status} in #{end_point} with #{params.to_s}" if res.status != 200
         body = JSON.load(res.body)
-        raise UnreadableMessageError, "Dilicom a returned a unreadable json for #{end_point} with #{params.to_s} : #{res.body}" if body.nil?
-        raise DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params.to_s} : #{body['returnMessage']}" if body.has_key?('returnStatus') and not ['OK','WARNING'].include?(body['returnStatus'])
+        fail UnreadableMessageError, "Dilicom a returned a unreadable json for #{end_point} with #{params.to_s} : #{res.body}" if body.nil?
+        fail DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params.to_s} : #{body['returnMessage']}" if body.has_key?('returnStatus') and not ['OK','WARNING'].include?(body['returnStatus'])
         body
       end
 

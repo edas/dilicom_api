@@ -10,7 +10,7 @@ module DilicomApi
         production: 'https://hub-dilicom.centprod.com',
         test: 'https://hub-test.centprod.com'
       }
-      
+
       attr_accessor :connection
       attr_writer :gln
       attr_writer :password
@@ -25,7 +25,6 @@ module DilicomApi
         raise "no server for env #{env.to_s}" if server.nil?
         connect(server) if gln and password
       end
-      
 
     protected
 
@@ -54,7 +53,7 @@ module DilicomApi
         raise DilicomHttpError, "Dilicom returned status #{res.status} in #{end_point} with #{params.to_s}" if res.status != 200
         body = JSON.load(res.body)
         raise UnreadableMessageError, "Dilicom a returned a unreadable json for #{end_point} with #{params.to_s} : #{res.body}" if body.nil?
-        raise DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params.to_s} : #{body['returnMessage']}" if body.has_key?('returnStatus') and not ['OK','WARNING'].include?(body['returnStatus']) 
+        raise DilicomStatusError, "Dilicom returned an error status #{body['returnStatus']} in #{end_point} with #{params.to_s} : #{body['returnMessage']}" if body.has_key?('returnStatus') and not ['OK','WARNING'].include?(body['returnStatus'])
         body
       end
 
@@ -70,7 +69,6 @@ module DilicomApi
       def faraday_builder(faraday)
         faraday.use Faraday::Request::BasicAuthentication, @gln, @password if @gln and @password
       end
-
     end
   end
 end

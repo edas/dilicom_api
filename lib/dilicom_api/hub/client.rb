@@ -26,7 +26,7 @@ module DilicomApi
         connect(server) if gln and password
       end
 
-    protected
+      protected
 
       def work_around_timezone_issues(time, fix = :before)
         if @work_around_timezone_issues

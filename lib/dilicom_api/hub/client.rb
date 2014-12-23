@@ -41,7 +41,7 @@ module DilicomApi
             end
           end
         end
-        return time
+        time
       end
 
       def json_request(end_point, params = {}, timeout: nil)

@@ -3,8 +3,8 @@ dilicom_api
 
 API to connect to the Dilicom Hub
 
- Dilicom: http://www.dilicom.net/
- Dilicom Hub API: https://hub-dilicom.centprod.com/documentation/
+Dilicom: http://www.dilicom.net/  
+Dilicom Hub API: https://hub-dilicom.centprod.com/documentation/
 
 How to use
 ----------

@@ -11,7 +11,7 @@ How to use
 
 ```ruby
 # use staging server
-dilicom = DilicomApi::Hub::Clent.new(my_gln, my_password, :test)
+dilicom = DilicomApi::Hub::Client.new(my_gln, my_password, :test)
 # date should be > 8.days.ago
 links = dilicom.latest_notices(since: DateTime.now)
 # dilicom usually send only one link, but the API could return multiple ones
@@ -21,7 +21,7 @@ end
 
 
 # use production server
-dilicom = DilicomApi::Hub::Clent.new(my_gln, my_password, :production)
+dilicom = DilicomApi::Hub::Client.new(my_gln, my_password, :production)
 # all notices since last connection
 # :last_connection parameter is optionnal (implicit)
 links = dilicom.latest_notices(:last_connection)

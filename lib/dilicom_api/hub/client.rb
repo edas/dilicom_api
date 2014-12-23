@@ -16,7 +16,7 @@ module DilicomApi
       attr_writer :password
       attr_accessor :work_around_timezone_issues
 
-      def initialize(gln=nil, password=nil, env: :test)
+      def initialize(gln = nil, password = nil, env: :test)
         @env = env
         @gln = gln
         @password = password
@@ -28,7 +28,7 @@ module DilicomApi
 
     protected
 
-      def work_around_timezone_issues(time, fix=:before)
+      def work_around_timezone_issues(time, fix = :before)
         if @work_around_timezone_issues
           time = time.in_time_zone(DILICOM_TIMEZONE)
           if time.hour == 2 or (time.hour == 3 and time.min == 0 and time.sec == 0)
@@ -44,7 +44,7 @@ module DilicomApi
         return time
       end
 
-      def json_request(end_point, params={}, timeout: nil)
+      def json_request(end_point, params = {}, timeout: nil)
         res = connection.get(end_point) do |req|
           req.headers['Accept'] = 'application/json'
           req.params = params

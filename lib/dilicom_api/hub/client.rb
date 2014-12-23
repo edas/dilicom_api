@@ -5,7 +5,7 @@ require 'active_support/time'
 module DilicomApi
   module Hub
     class Client
-      DILICOM_TIMEZONE = "Europe/Paris"
+      DILICOM_TIMEZONE = 'Europe/Paris'
       @@servers = {
         production: 'https://hub-dilicom.centprod.com',
         test: 'https://hub-test.centprod.com'

@@ -31,7 +31,7 @@ module DilicomApi
       def work_around_timezone_issues(time, fix = :before)
         if @work_around_timezone_issues
           time = time.in_time_zone(DILICOM_TIMEZONE)
-          if time.hour == 2 || (time.hour == 3 and time.min == 0 and time.sec == 0)
+          if time.hour == 2 || (time.hour == 3 && time.min == 0 && time.sec == 0)
             if time.to_time.beginning_of_day.zone != time.to_time.end_of_day.zone
               if fix == :before
                 return time.to_time.change(hour: 1, min: 59, sec: 59)

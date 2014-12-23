@@ -34,9 +34,9 @@ module DilicomApi
           if time.hour == 2 or (time.hour == 3 and time.min == 0 and time.sec == 0)
             if time.to_time.beginning_of_day.zone != time.to_time.end_of_day.zone
               if fix==:before
-                return time.to_time.change( hour:1, min:59, sec:59)
+                return time.to_time.change( hour: 1, min: 59, sec: 59)
               elsif fix==:after
-                return time.to_time.change( hour:3, min:0, sec:1)
+                return time.to_time.change( hour: 3, min: 0, sec: 1)
               end
             end
           end

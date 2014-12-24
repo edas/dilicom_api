@@ -35,7 +35,7 @@ describe DilicomApi::Hub::Client do
         end
       end
       links = subject.send(method, *method_parameters)
-      expect(called).to be_true
+      expect(called).to be true
     end
     it "should return array of links" do
       set_connection do |stub|

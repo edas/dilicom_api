@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'json'
 describe DilicomApi::Hub::Client do
-  
   include_context "faraday connection"
 
   describe "#json_request" do
@@ -17,7 +16,7 @@ describe DilicomApi::Hub::Client do
         subject.password = password
         headers = {}
         set_connection do |stub|
-          stub.get(example_end_point) do |env|   
+          stub.get(example_end_point) do |env|
             headers = env[:request_headers]
             [200, {}, "{}"]
           end
@@ -28,7 +27,7 @@ describe DilicomApi::Hub::Client do
       it "should send a json header" do
         headers = {}
         set_connection do |stub|
-          stub.get(example_end_point) do |env|   
+          stub.get(example_end_point) do |env|
             headers = env[:request_headers]
             [200, {}, "{}"]
           end
@@ -39,7 +38,7 @@ describe DilicomApi::Hub::Client do
       it "should send URI parameters" do
         received = {}
         set_connection do |stub|
-          stub.get(example_end_point) do |env|   
+          stub.get(example_end_point) do |env|
             received = env[:params]
             [200, {}, "{}"]
           end
@@ -51,7 +50,7 @@ describe DilicomApi::Hub::Client do
     context "when get an HTTP error" do
       it "should raise an exception" do
         set_connection do |stub|
-          stub.get(example_end_point) do |env|   
+          stub.get(example_end_point) do |env|
             received = env[:params]
             [400, {}, "{}"]
           end
@@ -62,7 +61,7 @@ describe DilicomApi::Hub::Client do
     context "when get a non-json response" do
       it "should raise an exception" do
         set_connection do |stub|
-          stub.get(example_end_point) do |env|   
+          stub.get(example_end_point) do |env|
             received = env[:params]
             [200, {}, "non json"]
           end
@@ -73,7 +72,7 @@ describe DilicomApi::Hub::Client do
     context "when get a dilicom return status error" do
       it "should raise an exception" do
         set_connection do |stub|
-          stub.get(example_end_point) do |env|   
+          stub.get(example_end_point) do |env|
             received = env[:params]
             [200, {}, "{\"returnStatus\":\"ERROR\"}"]
           end
@@ -84,7 +83,7 @@ describe DilicomApi::Hub::Client do
     context "when get a successfull response" do
       it "should answer json" do
         set_connection do |stub|
-          stub.get(example_end_point) do |env|   
+          stub.get(example_end_point) do |env|
             received = env[:params]
             [200, {}, JSON.dump(params)]
           end

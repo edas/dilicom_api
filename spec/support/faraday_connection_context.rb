@@ -5,7 +5,7 @@ shared_context "faraday connection" do
   def set_connection(&block)
     subject.connection = Faraday.new do |builder|
       subject.send(:faraday_builder, builder)
-      builder.use(FaradaySimulation::Adapter) do |stub|
+      builder.adapter :test do |stub|
         block.call(stub) if block
       end
     end
